@@ -11,15 +11,17 @@ window.resetPasswordAndOpenMail = async function () {
 
     if (!email) {
         errorDiv.textContent = "יש להזין כתובת מייל.";
+        errorDiv.style.display = "block";
         return;
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://netzach1232.github.io/Recipes-good/update-password.html'
+        redirectTo: 'https://netzach1232.github.io/recipes-new/update-password.html'
     });
 
     if (error) {
         errorDiv.textContent = "אירעה שגיאה: " + error.message;
+        errorDiv.style.display = "block";
         return;
     }
 
@@ -45,9 +47,12 @@ async function login() {
     const password = document.getElementById("loginPassword").value;
 
     if (!email || !password) {
-        document.getElementById("error").textContent = "יש למלא את כל השדות.";
+        const errorBox = document.getElementById("error");
+        errorBox.textContent = "יש למלא את כל השדות.";
+        errorBox.style.display = "block"; // ← זו השורה שחסרה לך
         return;
     }
+
 
     const { data, error } = await supabase.auth.signInWithPassword({
         email,
