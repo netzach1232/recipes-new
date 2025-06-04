@@ -134,7 +134,7 @@ async function register() {
         password,
         options: {
             createSession: false,
-            emailRedirectTo: "https://netzach1232.github.io/Recipes-good/index.html"
+            emailRedirectTo: "https://netzach1232.github.io/recipes-new/"
         }
     });
 
