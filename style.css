@@ -173,3 +173,33 @@ body {
         height: 20px;
     }
 }
+
+#error.error2 {
+    color: #b30000;
+    background-color: #ffe5e5;
+    border: 1px solid #ffb3b3;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 12px auto;
+    max-width: 400px;
+    text-align: center;
+    display: none;
+    /* נתחיל מוסתר, תציג אותו דרך JS */
+    animation: flashError 1.2s ease-in-out infinite;
+}
+
+@keyframes flashError {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(1.02);
+    }
+}
