@@ -1,0 +1,431 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    direction: rtl;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+form h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+    font-size: 1.4rem;
+}
+
+form label {
+    display: block;
+    margin: 14px 0 6px;
+    font-weight: bold;
+    color: #444;
+}
+
+
+
+form textarea {
+    resize: vertical;
+}
+
+form button {
+    margin-top: 20px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+#fileLimitMessage {
+    font-size: 0.9rem;
+}
+
+/* קופסת קוד סודי */
+.secret-box {
+    display: none;
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+}
+
+.secret-box input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.secret-box button {
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: #2196F3;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.secret-box button:hover {
+    background-color: #0b7dda;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #888;
+}
+
+/* רספונסיביות */
+@media (min-width: 600px) {
+    form#recipeForm {
+        padding: 32px;
+    }
+
+    .secret-box {
+        padding: 32px;
+    }
+}
+
+
+form#recipeForm {
+    background: white;
+    margin-top: 0;
+    padding: 20px;
+    border-radius: 0;
+    box-shadow: none;
+    width: 100vw;
+    /* תופס את כל הרוחב */
+    height: 100vh;
+    /* תופס את כל הגובה */
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.custom-select {
+    position: relative;
+    font-weight: bold;
+    direction: rtl;
+    user-select: none;
+    width: 100%;
+}
+
+/* האלמנט הנבחר */
+.custom-select .selected {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px 40px 12px 12px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    position: relative;
+}
+
+/* חץ כחול למטה */
+.custom-select .selected::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-top-color: #3498db;
+    /* כחול */
+    pointer-events: none;
+}
+
+/* רשימת האפשרויות */
+.custom-select .options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    z-index: 999;
+    border-radius: 0 0 10px 10px;
+}
+
+/* כל אפשרות ברשימה */
+.custom-select .option {
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+/* כשהעכבר עובר על אפשרות */
+.custom-select .option:hover {
+    background-color: #f0f0f0;
+}
+
+/* צבעים */
+.green {
+    color: #2ecc71;
+}
+
+.blue {
+    color: #3498db;
+}
+
+.red {
+    color: #e74c3c;
+}
+
+/* עיצוב כללי של הטופס */
+#recipeForm {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 600px;
+    margin: 40px auto;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+    direction: rtl;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* כותרת */
+#recipeForm h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* תוויות */
+#recipeForm label {
+    display: block;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #34495e;
+    font-size: 15px;
+}
+
+/* שדות קלט כלליים */
+.recipe-input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 6px;
+    border: 1px solid #cccccc6c;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-size: 18px;
+    background-color: #f9f9f97c;
+    transition: border 0.3s ease, background-color 0.3s ease;
+}
+
+/* כשהשדה בפוקוס */
+.recipe-input:focus {
+    border-color: #a5a7a8;
+    outline: none;
+    background-color: #ffffff;
+}
+
+/* תפריטי בחירה */
+select.recipe-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%233498db' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592c.86 0 1.32 1.013.753 1.658L8.753 11.14a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 10px center;
+    background-size: 16px;
+    padding-right: 32px;
+    font-weight: bold;
+}
+
+/* הודעת הגבלה על תמונות */
+#fileLimitMessage {
+    font-size: 13px;
+    color: red;
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+/* קלט קובץ */
+input[type="file"] {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* כפתור שליחה */
+#userSubmitBtn {
+    width: 100%;
+    margin-top: 30px;
+    background-color: #27ae60;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+#userSubmitBtn:hover {
+    background-color: #1e874b;
+}
+
+/* הודעה מתחת לטופס */
+#recipeForm p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    font-weight: bold;
+}
+
+textarea.recipe-input {
+    resize: none;
+}
+
+.sent-botton1 {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    padding: 12px 20px;
+    margin: 20px auto;
+    background: linear-gradient(45deg, #e67e22, #f39c12);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sent-botton1:hover {
+    background: linear-gradient(45deg, #d35400, #e67e22);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.sent-botton1:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sent-botton1::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.sent-botton1:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+@media (max-width: 600px) {
+    .sent-botton1 {
+        padding: 10px 16px;
+        font-size: 14px;
+        max-width: 160px;
+    }
+}
+
+.image-preview-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.image-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-wrapper img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.image-wrapper button {
+    background: none;
+    border: none;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.image-wrapper button img {
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+}
+
+.image-wrapper button:hover,
+.image-wrapper button img:hover {
+    background: none;
+    filter: none;
+    transform: none;
+    opacity: 1;
+}
+
+.custom-file-input-wrapper {
+    position: relative;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.custom-file-label {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 15px;
+}
+
+.custom-file-label:hover {
+    background-color: #2c80c5;
+}
+
+.custom-file-input-wrapper input[type="file"] {
+    display: none;
+}

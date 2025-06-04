@@ -1,0 +1,599 @@
+/* style.css */
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    direction: rtl;
+    box-sizing: border-box;
+}
+
+
+/* מידע על המשתמש */
+#userInfo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex-direction: column;
+    position: relative;
+    gap: 4px;
+    /* רווח בין התמונה לטקסט */
+}
+
+#userInfo img {
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+    border-radius: 50%;
+}
+
+#userEmail {
+    font-weight: bolder;
+    font-size: 0.9rem;
+}
+
+#userEmail {
+    direction: rtl;
+    unicode-bidi: plaintext;
+}
+
+/* תפריט יציאה */
+#logoutMenu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+    z-index: 999;
+}
+
+@keyframes pulse-flash {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
+    }
+
+    50% {
+        transform: scale(1.06);
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
+    }
+}
+
+#logoutMenu button {
+    background-color: #fff;
+    color: #e74c3c;
+    padding: 8px 16px;
+    border: 2px solid #e74c3c;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    animation: pulse-flash 1.4s ease-in-out infinite;
+}
+
+#logoutMenu button:hover {
+    background-color: #e74c3c;
+    color: white;
+    transform: scale(1.04);
+}
+
+
+
+.hidden {
+    display: none;
+}
+
+/* כפתור הוספת מתכון */
+.add-recipe-btn {
+    background-color: #ffffff91;
+    color: rgb(23, 81, 206);
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bolder;
+    margin-top: 8px;
+}
+
+.add-recipe-btn:hover {
+    background-color: #99adc06e;
+}
+
+/* רשימת מתכונים */
+#recipeList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+}
+
+/* כרטיס מתכון */
+.recipe-container {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    max-width: 700px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.recipe-button {
+    background-color: #eee;
+    padding: 12px;
+    width: 100%;
+    text-align: right;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.recipe-full {
+    display: none;
+    padding: 16px;
+    border-top: 1px solid #ccc;
+}
+
+.recipe-full.open {
+    display: block;
+}
+
+.recipe-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.recipe-text {
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+}
+
+
+.recipe-title,
+.recipe-description {
+    margin-top: 5px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+
+/* תמונות */
+.recipe-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.recipe-images {
+    order: -1;
+}
+
+.recipe-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+
+.pagination {
+    width: 100%;
+    clear: both;
+    margin-top: 60px;
+    text-align: center;
+    direction: ltr;
+}
+
+
+
+.pagination button {
+    margin: 0 4px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+.pagination .active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+@media (min-width: 600px) {
+    .recipe-content {
+        flex-direction: row-reverse;
+    }
+
+    .recipe-img {
+        max-width: 120px;
+    }
+
+    .top-bar {
+        flex-wrap: nowrap;
+    }
+
+    #searchInput {
+        width: 200px;
+    }
+}
+
+.recipe-container {
+    overflow: hidden;
+}
+
+.recipe-content {
+    word-break: break-word;
+    width: 100%;
+}
+
+.top-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: #d8ae5b;
+    padding: 10px 16px;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    gap: 10px;
+    direction: rtl;
+}
+
+
+
+.top-bar .left,
+.top-bar .center,
+.top-bar .right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.top-bar .center {
+    justify-content: center;
+    flex: 1;
+}
+
+.logo {
+    height: 40px;
+}
+
+#searchInput {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-left: 50px;
+    /* רווח בין החיפוש לפרופיל */
+}
+
+#searchInput:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(25, 118, 210, 0.5);
+}
+
+@media (max-width: 600px) {
+    .top-bar {
+        display: grid;
+        grid-template-areas:
+            "add     logo     user"
+            "search  search   search";
+        grid-template-columns: 1fr auto 1fr;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        direction: rtl;
+    }
+
+    .logo-right {
+        grid-area: logo;
+        justify-content: center;
+        display: flex;
+    }
+
+    .add-btn {
+        grid-area: add;
+        justify-content: flex-start;
+        display: flex;
+        margin-top: -10px;
+    }
+
+    .user-left {
+        grid-area: user;
+        justify-content: flex-end;
+        display: flex;
+    }
+
+    .search-center {
+        grid-area: search;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    #searchInput {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    #userInfo {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 6px;
+    }
+}
+
+
+@media (min-width: 600px) {
+    .recipe-img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (min-width: 600px) {
+    .top-bar {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .logo-right,
+    .add-btn,
+    .search-center,
+    .user-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-right {
+        order: 1;
+        /* ראשון – מימין */
+        margin-right: 5px;
+    }
+
+    .add-btn {
+        order: 2;
+        margin-right: 50px;
+        margin-top: -10px;
+    }
+
+    .search-center {
+        order: 3;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .user-left {
+        order: 4;
+        /* אחרון – שמאל */
+    }
+
+    #searchInput {
+        width: 250px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    #userInfo {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 6px;
+    }
+}
+
+.home-btn {
+    margin: 0 10px;
+}
+
+.home-recipe-btn {
+    background-color: #ffffff73;
+    border: 1px solid #ffffff00;
+    border-radius: 8px;
+    padding: 10px 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    color: #000000;
+    font-weight: bolder;
+    box-shadow: 0 0px 4px 0.1px rgba(151, 106, 9, 0.658);
+    max-width: 60px;
+    max-height: 60px;
+
+
+}
+
+.home-recipe-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.autocomplete-list {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-list li {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+.autocomplete-list li:hover {
+    background-color: #f0f0f0;
+}
+
+#recipeSuggestions {
+    display: none;
+    position: absolute;
+    top: 100%;
+    width: 84%;
+    /* ברירת מחדל למחשב */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 5px;
+    padding: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.recipe-suggestion-item {
+    padding: 10px 16px;
+    font-size: 16px;
+    color: #2c3e50;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.recipe-suggestion-item:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+}
+
+.recipe-suggestion-item:last-child {
+    border-bottom: none;
+}
+
+/* 📱 מדיה קווארי לניידים – רוחב מלא */
+@media (max-width: 600px) {
+    #recipeSuggestions {
+        width: 100%;
+    }
+}
+
+/* עיצוב משופר לפרטי מתכון */
+.recipe-text>div {
+    margin-bottom: 12px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-right: 5px solid #ffb74d;
+    border-radius: 8px;
+}
+
+.recipe-text>div strong {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #d17e0e;
+    margin-bottom: 4px;
+}
+
+.recipe-text>div div {
+    font-weight: 500;
+    line-height: 1.5;
+    color: #333;
+    white-space: pre-wrap;
+}
+
+.recipe-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.recipe-description {
+    font-style: italic;
+    color: #555;
+}
+
+/* עיצוב משופר למובייל – מתכונים */
+@media (max-width: 600px) {
+    .recipe-text>div {
+        padding: 8px;
+        font-size: 0.95rem;
+        border-right: 4px solid #ffcc80;
+    }
+
+    .recipe-text>div strong {
+        font-size: 0.95rem;
+    }
+
+    .recipe-title {
+        font-size: 1.1rem;
+    }
+
+    .recipe-description {
+        font-size: 0.95rem;
+    }
+
+    .recipe-img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+.difficulty {
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.95rem;
+}
+
+.difficulty.green {
+    background-color: #eafaf1;
+    color: #2ecc71;
+}
+
+.difficulty.blue {
+    background-color: #e8f4fb;
+    color: #3498db;
+}
+
+.difficulty.red {
+    background-color: #fdeaea;
+    color: #e74c3c;
+}
+
+
+
+.section-title hr {
+    margin: 2px 0 6px 0;
+    max-width: 30%;
+    height: 2px;
+    background-color: #999;
+    border: none;
+    display: inline-block;
+}

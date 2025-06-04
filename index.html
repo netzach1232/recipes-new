@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התחברות</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- התחברות -->
+    <div class="login-container">
+        <h2 style="color: rgb(86, 116, 117); font-size: xx-large;">התחבר לאפליקציית המתכונים</h2>
+
+        <input type="email" id="username" placeholder="אימייל" />
+
+        <div class="password-container">
+            <input type="password" id="loginPassword" placeholder="סיסמה" />
+            <span class="toggle" onclick="togglePassword('loginPassword', this)">
+                <!-- עין סגורה (ברירת מחדל) -->
+                <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.93 21.93 0 014.24-5.53M6.1 6.1
+        A10.94 10.94 0 0112 5c7 0 11 7 11 7a21.93 21.93 0 01-5.23 5.92M1 1l22 22" />
+                </svg>
+            </span>
+        </div>
+
+        <button onclick="login()"><span style="color: rgb(0, 0, 0);">התחבר</span></button>
+        <button onclick="openRegister()"><span style="color: rgb(0, 0, 0);">הירשם</span></button>
+        <button onclick="resetPasswordAndOpenMail()"><span style="color: rgb(0, 0, 0);">שכחתי
+                סיסמה</span></button>
+        <p id="error"></p>
+    </div>
+
+    <!-- הרשמה -->
+    <div id="registerOverlay" class="overlay hidden">
+        <div class="register-form">
+            <h2>צור חשבון חדש</h2>
+
+            <input type="text" id="firstName" placeholder="שם פרטי" />
+            <small class="error-msg" id="firstNameError"></small>
+
+            <input type="text" id="lastName" placeholder="שם משפחה" />
+            <small class="error-msg" id="lastNameError"></small>
+
+            <input type="email" id="registerEmail" placeholder="אימייל" />
+            <small class="error-msg" id="emailError"></small>
+
+            <div class="password-container">
+                <input type="password" id="registerPassword" placeholder="סיסמה" />
+                <span class="toggle2" onclick="togglePassword('registerPassword', this)">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.93 21.93 0 014.24-5.53M6.1 6.1
+          A10.94 10.94 0 0112 5c7 0 11 7 11 7a21.93 21.93 0 01-5.23 5.92M1 1l22 22" />
+                    </svg>
+                </span>
+            </div>
+            <small class="error-msg" id="passwordError"></small>
+
+            <div class="password-container">
+                <input type="password" id="confirmPassword" placeholder="אימות סיסמה" />
+                <span class="toggle2" onclick="togglePassword('confirmPassword', this)">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.93 21.93 0 014.24-5.53M6.1 6.1
+          A10.94 10.94 0 0112 5c7 0 11 7 11 7a21.93 21.93 0 01-5.23 5.92M1 1l22 22" />
+                    </svg>
+                </span>
+            </div>
+            <small class="error-msg" id="confirmError"></small>
+
+            <button onclick="register()">צור חשבון</button>
+            <button onclick="closeRegister()">סגור</button>
+        </div>
+    </div>
+
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const justLoggedOut = sessionStorage.getItem("justLoggedOut");
+
+            if (justLoggedOut === "true") {
+                sessionStorage.removeItem("justLoggedOut"); // מנקה את הדגל
+                const email = document.getElementById("username");
+                const password = document.getElementById("password");
+
+                if (email) email.value = "";
+                if (password) password.value = "";
+            }
+
+            // לא נוגעים ב־autocomplete
+        });
+
+
+        function togglePassword(id, el) {
+            const input = document.getElementById(id);
+            const isVisible = input.type === "text";
+            input.type = isVisible ? "password" : "text";
+
+            el.innerHTML = isVisible
+                // עין סגורה (הסתר סיסמה)
+                ? `<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2">
+         <path d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.93 21.93 0 014.24-5.53M6.1 6.1
+         A10.94 10.94 0 0112 5c7 0 11 7 11 7a21.93 21.93 0 01-5.23 5.92M1 1l22 22" />
+       </svg>`
+                // עין פתוחה (הצג סיסמה)
+                : `<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2">
+         <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+         <circle cx="12" cy="12" r="3" />
+       </svg>`;
+        }
+
+    </script>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>

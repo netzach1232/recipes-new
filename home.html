@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <title>דף הבית</title>
+    <link rel="stylesheet" href="style2.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <header class="top-bar">
+        <div class="logo-right">
+            <img src="images/cooking.png" alt="לוגו" class="logo" />
+        </div>
+
+        <div class="add-btn">
+            <button class="add-recipe-btn" onclick="window.location.href='add-recipe.html'">➕ הוסף מתכון</button>
+        </div>
+        <div class="search-center">
+            <div style="display: flex; gap: 10px; align-items: center; position: relative;">
+                <div style="position: relative; width: 100%;">
+                    <input type="text" id="searchInput" placeholder="חפש מתכון..." onkeydown="handleSearchKey(event)">
+                    <div id="recipeSuggestions" class="autocomplete-suggestions"></div>
+                </div>
+                <button class="home-recipe-btn hidden" id="backToAllBtn" onclick="handleBackToAll()">🏠 ראשי</button>
+            </div>
+        </div>
+
+        <div class="user-left">
+            <div id="userInfo">
+                <img src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" alt="User Icon">
+                <span id="userEmail">שלום</span>
+                <div id="logoutMenu" class="hidden">
+                    <button id="logoutBtn" class="exit">🚪 יציאה</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+    <div id="content"></div>
+
+
+    <!-- כאן יופיעו המתכונים -->
+    <div id="recipeList" style="padding: 30px;"></div>
+    <div class="pagination" id="paginationContainer"></div>
+
+
+
+
+    <p id="error"></p>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const SUPABASE_URL = 'https://izpbbjhikbbbyahxzhkg.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6cGJiamhpa2JiYnlhaHh6aGtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxOTMxMDUsImV4cCI6MjA2Mzc2OTEwNX0.Gv0WaUlkUAW1qBNEaaXDCWWpwWgbvBTya8KQzFhx08s'; // שים את המפתח המלא שלך פה
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true
+            },
+            global: {
+                headers: {
+                    apikey: SUPABASE_KEY
+                }
+            }
+        });
+
+
+        checkSession();
+
+        // הצגת תפריט יציאה בלחיצה על האזור של המשתמש
+        document.getElementById("userInfo").addEventListener("click", () => {
+            const menu = document.getElementById("logoutMenu");
+            menu.classList.toggle("hidden");
+        });
+
+
+        window.handleSearchKey = async function (e) {
+            if (e.key !== "Enter") return;
+
+            const query = e.target.value.trim().toLowerCase();
+            const list = document.getElementById("recipeList");
+            list.innerHTML = "";
+
+            const { data, error } = await supabase.from("recipes").select("*");
+
+            if (error) {
+                console.error("שגיאה בקבלת נתונים מהשרת:", error);
+                return;
+            }
+
+            const approved = data.filter(r => r.is_approved === true);
+            const results = approved.filter(r => (r.title || "").toLowerCase().includes(query));
+
+            const backBtn = document.getElementById("backToAllBtn");
+            if (backBtn) backBtn.classList.remove("hidden");
+
+            if (results.length === 0) {
+                list.innerHTML = `<p id="noResultsMessage" style="color:#152ebd;  font-weight: bolder; font-size: xx-large; margin-top:15px;">לא נמצא המתכון!</p>`;
+                return;
+            }
+
+            results.forEach(recipe => list.appendChild(createRecipeElement(recipe)));
+            applyDifficultyColors();
+
+        };
+
+
+        function createRecipeElement(recipe) {
+            const container = document.createElement("div");
+            container.classList.add("recipe-container");
+
+            const previewHTML = `<button class="recipe-button">${recipe.title || "ללא כותרת"}</button>`;
+            const fullHTML = `
+<div class="recipe-content">
+    <div class="recipe-text">
+        <div><strong>כותרת:</strong><div class="recipe-title">${recipe.title || "ללא כותרת"}</div></div>
+        <div><strong>תיאור:</strong><div class="recipe-description">${recipe.description || "אין תיאור למתכון"}</div></div>
+        <div><strong>מצרכים:</strong><div>${recipe.ingredients || "לא צויינו מצרכים"}</div></div>
+        <div><strong>אופן הכנה:</strong><div>${recipe.instructions || "אין הוראות הכנה"}</div></div>
+        <div><strong>רמת קושי:</strong><br><div class="difficulty">${recipe.difficulty || "לא צויין"}</div></div>
+        <div><strong>⏱️ זמן הכנה:</strong><div>${recipe.prep_time_range || "לא צויין"}</div></div>
+    </div>
+    <div class="recipe-images">
+        ${recipe.image1_url ? `<img src="${recipe.image1_url}" class="recipe-img">` : ""}
+        ${recipe.image2_url ? `<img src="${recipe.image2_url}" class="recipe-img">` : ""}
+        ${recipe.image3_url ? `<img src="${recipe.image3_url}" class="recipe-img">` : ""}
+    </div>
+</div>
+`;
+
+
+
+            const preview = document.createElement("div");
+            preview.classList.add("recipe-preview");
+            preview.innerHTML = previewHTML;
+
+            const full = document.createElement("div");
+            full.classList.add("recipe-full");
+            full.innerHTML = fullHTML;
+
+            container.appendChild(preview);
+            container.appendChild(full);
+
+            container.addEventListener("click", () => {
+                // סגור מתכונים פתוחים אחרים
+                document.querySelectorAll(".recipe-full.open").forEach(el => {
+                    if (el !== full) el.classList.remove("open");
+                });
+                full.classList.toggle("open");
+            });
+
+            return container;
+        }
+
+
+
+        let currentPage = 1;
+        const recipesPerPage = 10;
+
+        async function loadRecipes(page = 1) {
+            currentPage = page;
+
+            const { data, error } = await supabase.from("recipes").select("*");
+            if (error) return console.error("❌ שגיאה בקבלת מתכונים:", error);
+
+            const approved = data.filter(recipe => recipe.is_approved === true);
+            const list = document.getElementById("recipeList");
+            list.innerHTML = "";
+
+            if (approved.length === 0) {
+                list.innerHTML = "<p>⚠️ אין עדיין מתכונים מאושרים להצגה.</p>";
+                return;
+            }
+
+            const start = (page - 1) * recipesPerPage;
+            const end = start + recipesPerPage;
+            const currentRecipes = approved.slice(start, end);
+
+            currentRecipes.forEach(recipe => list.appendChild(createRecipeElement(recipe)));
+
+            renderPagination(approved.length);
+            applyDifficultyColors();
+
+        }
+
+
+
+        function renderPagination(totalRecipes) {
+            const totalPages = Math.ceil(totalRecipes / recipesPerPage);
+            const list = document.getElementById("recipeList");
+
+            const pagination = document.createElement("div");
+            pagination.className = "pagination";
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.textContent = i;
+                btn.className = i === currentPage ? "active" : "";
+                btn.onclick = () => loadRecipes(i);
+                pagination.appendChild(btn);
+            }
+
+            list.appendChild(pagination);
+        }
+
+
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session) {
+                alert("החיבור שלך פג תוקף או שאינך מחובר");
+                window.location.href = "index.html";
+                return;
+            }
+
+            const fullEmail = session.user.email;
+            const shortEmail = fullEmail.length > 8
+                ? fullEmail.substring(0, 5) + "..."
+                : fullEmail;
+
+            document.getElementById("userEmail").innerHTML = `שלום, <span dir="ltr">${shortEmail}</span>`;
+            console.log("משתמש מחובר:", session.user.email);
+
+            // ⬅️ קריאה אחרי שהפונקציה קיימת
+            loadRecipes();
+        }
+
+        checkSession();
+
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+            await supabase.auth.signOut();
+            localStorage.clear(); // מוחק כל מה שנשמר
+            sessionStorage.clear(); // אם השתמשת גם בזה
+            window.location.href = "index.html";
+        });
+
+        window.handleBackToAll = function () {
+            document.getElementById("searchInput").value = "";
+            const backBtn = document.getElementById("backToAllBtn");
+            if (backBtn) backBtn.classList.add("hidden");
+            loadRecipes();
+        };
+
+        const recipeInput = document.getElementById("searchInput");
+        const suggestionBox = document.getElementById("recipeSuggestions");
+
+        recipeInput.addEventListener("input", async () => {
+            const query = recipeInput.value.trim().toLowerCase();
+            suggestionBox.innerHTML = "";
+
+            if (query.length < 1) {
+                suggestionBox.style.display = "none";
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from("recipes")
+                .select("title, is_approved");
+
+            if (error || !data) {
+                suggestionBox.style.display = "none";
+                return;
+            }
+
+            const approvedTitles = data
+                .filter(r => r.is_approved)
+                .map(r => r.title)
+                .filter(Boolean)
+                .filter(title => title.toLowerCase().startsWith(query))
+                .slice(0, 10); // עד 10 הצעות
+
+            if (approvedTitles.length === 0) {
+                suggestionBox.style.display = "none";
+                return;
+            }
+
+            approvedTitles.forEach(title => {
+                const item = document.createElement("div");
+                item.className = "recipe-suggestion-item";
+                item.textContent = title;
+
+                item.addEventListener("click", () => {
+                    recipeInput.value = title;
+                    suggestionBox.style.display = "none";
+                    const enterEvent = new KeyboardEvent("keydown", { key: "Enter" });
+                    recipeInput.dispatchEvent(enterEvent);
+                });
+
+                suggestionBox.appendChild(item);
+            });
+
+            suggestionBox.style.display = "block";
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest("#searchInput") && !e.target.closest("#recipeSuggestions")) {
+                suggestionBox.style.display = "none";
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            const userInfo = document.getElementById("userInfo");
+            const logoutMenu = document.getElementById("logoutMenu");
+
+            // אם נלחץ בתוך האזור של המשתמש או כפתור היציאה – אל תסגור
+            if (userInfo.contains(event.target) || logoutMenu.contains(event.target)) {
+                return;
+            }
+
+            // אחרת – תסגור
+            logoutMenu.classList.add("hidden");
+        });
+
+        function applyDifficultyColors() {
+            document.querySelectorAll(".difficulty").forEach(div => {
+                const text = div.textContent.trim();
+                div.classList.remove("green", "blue", "red"); // נקה קודם
+                if (text === "קל") div.classList.add("green");
+                if (text === "בינוני") div.classList.add("blue");
+                if (text === "קשה") div.classList.add("red");
+            });
+        }
+        applyDifficultyColors();
+
+    </script>
+
+</body>
+
+</html>
