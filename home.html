@@ -133,10 +133,10 @@
         <div><strong>כותרת:</strong><div class="recipe-title">${recipe.title || "ללא כותרת"}</div></div>
         <div><strong>תיאור:</strong><div class="recipe-description">${recipe.description || "אין תיאור למתכון"}</div></div>
         <div><strong>מצרכים:</strong><div>${recipe.ingredients || "לא צויינו מצרכים"}</div></div>
-        <div><strong>אופן הכנה:</strong><div>${recipe.instructions || "אין הוראות הכנה"}</div></div>
         <div><strong>רמת קושי:</strong><br><div class="difficulty">${recipe.difficulty || "לא צויין"}</div></div>
         <div><strong>⏱️ זמן הכנה:</strong><div>${recipe.prep_time_range || "לא צויין"}</div></div>
         <div><strong>📝 קטגוריה:</strong><div>${recipe.category || "לא צוינה קטגוריה"}</div></div>
+                <div><strong>אופן הכנה:</strong><div>${recipe.instructions || "אין הוראות הכנה"}</div></div>
     </div>
     <div class="recipe-images">
         ${recipe.image1_url ? `<img src="${recipe.image1_url}" class="recipe-img">` : ""}
