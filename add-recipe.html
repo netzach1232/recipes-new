@@ -12,6 +12,9 @@
     <form id="recipeForm" enctype="multipart/form-data">
         <h2 style="font-size: 28px;">📝 הוסף מתכון חדש</h2>
         <hr>
+        <label>👤 שם השולח (אפשר בדוי):</label>
+        <input type="text" name="author" class="recipe-input" placeholder="לדוגמה: קובי כהן או 'הטבח הסודי'" required>
+
         <label>כותרת המתכון:</label>
         <input type="text" name="title" required class="recipe-input title-input">
 
@@ -35,7 +38,15 @@
         <input type="hidden" name="difficulty">
 
 
-
+        <label>קטגוריה:</label>
+        <select name="category" required class="recipe-input">
+            <option value="">בחר קטגוריה</option>
+            <option value="בשרים">בשרים</option>
+            <option value="קינוחים">קינוחים</option>
+            <option value="תוספות">תוספות</option>
+            <option value="מרקים">מרקים</option>
+            <option value="טבעוני">טבעוני</option>
+        </select>
 
         <label>⏱️ זמן הכנה:</label>
         <select name="prep_time_range" required class="recipe-input prep-time-select">
@@ -53,6 +64,7 @@
             <label for="imagesInput" class="custom-file-label">📁 בחר תמונות</label>
             <input type="file" id="imagesInput" name="images" accept="image/*" multiple onchange="limitFiles(this)">
         </div>
+
 
         <div id="imagePreview" class="image-preview-container"></div>
 
@@ -210,6 +222,8 @@
             const instructions = document.querySelector('textarea[name="instructions"]').value.trim();
             const difficulty = document.querySelector('input[name="difficulty"]').value.trim();
             const prep_time_range = document.querySelector('select[name="prep_time_range"]').value;
+            const category = document.querySelector('select[name="category"]').value;
+            const author = document.querySelector('input[name="author"]').value.trim();
 
             if (!title || !description || !ingredients || !instructions || !difficulty || !prep_time_range) {
                 alert("נא למלא את כל השדות הנדרשים.");
@@ -223,11 +237,14 @@
                 instructions,
                 difficulty,
                 prep_time_range,
+                category,
+                author, // ✅ שם השולח
                 image1_url: imageUrls[0] || null,
                 image2_url: imageUrls[1] || null,
                 image3_url: imageUrls[2] || null,
                 is_approved: false
             });
+
 
 
             if (error) {
