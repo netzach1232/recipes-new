@@ -61,9 +61,12 @@ async function login() {
 
     if (error) {
         console.log("שגיאה בלוגין:", error.message);
-        document.getElementById("error").textContent = "אימייל או סיסמה שגויים.";
+        const errorBox = document.getElementById("error");
+        errorBox.textContent = "אימייל או סיסמה שגויים.";
+        errorBox.style.display = "block";
         return;
     }
+
 
     const now = new Date();
     now.setMinutes(now.getMinutes() + 15);
