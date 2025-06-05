@@ -13,20 +13,20 @@
         <h2 style="font-size: 28px;">📝 הוסף מתכון חדש</h2>
         <hr>
         <label>👤 שם השולח (אפשר בדוי):</label>
-        <input type="text" name="author" class="recipe-input" placeholder="לדוגמה: שם או 'הטבח הסודי'" required>
+        <input type="text" name="author" class="recipe-input" placeholder="לדוגמה: שם או 'הטבח הסודי'">
 
-        <label>כותרת המתכון:</label>
+        <label><span style="color: red;">*</span> כותרת המתכון:</label>
         <input type="text" name="title" required class="recipe-input title-input">
 
         <label>תיאור:</label>
-        <textarea name="description" rows="4" required class="recipe-input description-input"></textarea>
+        <textarea name="description" rows="4" class="recipe-input description-input"></textarea>
 
-        <label>מצרכים:</label>
+        <label><span style="color: red;">*</span>מצרכים:</label>
         <textarea name="ingredients" rows="4" required class="recipe-input ingredients-input"></textarea>
 
-        <label>אופן הכנה:</label>
+        <label><span style="color: red;">*</span>אופן ההכנה:</label>
         <textarea name="instructions" rows="4" required class="recipe-input instructions-input"></textarea>
-        <label>רמת קושי:</label>
+        <label><span style="color: red;">*</span>רמת קושי:</label>
         <div class="custom-select" id="customDifficulty">
             <div class="selected">בחר רמת קושי</div>
             <div class="options">
@@ -38,7 +38,7 @@
         <input type="hidden" name="difficulty">
 
 
-        <label>קטגוריה:</label>
+        <label><span style="color: red;">*</span>קטגוריה:</label>
         <select name="category" required class="recipe-input">
             <option value="">בחר קטגוריה</option>
             <option value="בשרים">בשרים</option>
@@ -49,7 +49,7 @@
         </select>
 
         <label>⏱️ זמן הכנה:</label>
-        <select name="prep_time_range" required class="recipe-input prep-time-select">
+        <select name="prep_time_range" class="recipe-input prep-time-select">
             <option value="">בחר זמן הכנה</option>
             <option value="0-15">0–15 דקות</option>
             <option value="15-30">15–30 דקות</option>
@@ -68,8 +68,9 @@
 
         <div id="imagePreview" class="image-preview-container"></div>
 
-        <p id="fileLimitMessage" style="color: rgb(216, 112, 98); display: none; margin-top: 8px;">
-            ניתן לבחור עד 3 תמונות בלבד !
+        <p id="fileLimitMessage"
+            style="color: rgb(216, 112, 98); display: none; font-weight: bolder; font-size: x-large; margin-top: 8px;">
+            ניתן לבחור עד 3 תמונות בלבד בחר את הנותרות
         </p>
 
 
@@ -82,6 +83,8 @@
 
 
     <script type="module">
+        let selectedFiles = [];
+
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
         const SUPABASE_URL = 'https://izpbbjhikbbbyahxzhkg.supabase.co';
@@ -255,16 +258,6 @@
         });
 
 
-        window.limitFiles = function (input) {
-            const msg = document.getElementById("fileLimitMessage");
-            if (input.files.length > 3) {
-                msg.style.display = "block";
-                input.value = ""; // מנקה את הבחירה
-            } else {
-                msg.style.display = "none";
-            }
-        };
-
 
         const select = document.getElementById("customDifficulty");
         const selected = select.querySelector(".selected");
@@ -291,8 +284,6 @@
             }
         });
 
-        let selectedFiles = [];
-
         window.limitFiles = function (input) {
             const msg = document.getElementById("fileLimitMessage");
             const previewContainer = document.getElementById("imagePreview");
@@ -300,6 +291,12 @@
 
             if (selectedFiles.length + files.length > 3) {
                 msg.style.display = "block";
+
+                // הסרת האנימציה אם כבר מופעלת כדי לאפס אותה
+                msg.classList.remove("flash-animation");
+                void msg.offsetWidth; // טריק להפעלת האנימציה מחדש
+                msg.classList.add("flash-animation");
+
                 input.value = "";
                 return;
             }
@@ -319,7 +316,7 @@
 
                     const deleteBtn = document.createElement("button");
                     const icon = document.createElement("img");
-                    icon.src = "images/delete-icon1.png"; // ודא שזה תקין ויחסי
+                    icon.src = "images/delete-icon1.png";
                     icon.alt = "מחק";
 
                     deleteBtn.appendChild(icon);
