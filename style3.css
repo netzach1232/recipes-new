@@ -450,3 +450,31 @@ textarea.recipe-input {
 .flash-animation {
     animation: flash 1.8s ease-in-out infinite;
 }
+
+#formErrorBanner {
+    background-color: #ffe2e2;
+    color: #c0392b;
+    padding: 12px 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    animation: flash 1.5s ease-in-out infinite;
+    /* מהבהב 3 פעמים */
+}
+
+@keyframes flash {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.2;
+    }
+}
