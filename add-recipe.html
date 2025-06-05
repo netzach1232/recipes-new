@@ -77,7 +77,9 @@
         <hr style="margin-top: 30px;">
         <p style="font-weight: bolder; font-size: xx-large;">📨 הטופס ישלח לבדיקה ופרסום</p>
 
+        <div id="formErrorBanner" class="form-error-banner" style="display: none;"></div>
         <button type="button" id="userSubmitBtn" class="sent-botton1">שלח</button>
+
     </form>
 
 
@@ -195,19 +197,36 @@
                 reader.readAsDataURL(file);
             });
         }
-        document.getElementById("userSubmitBtn").addEventListener("click", async () => {
-            const title = document.querySelector('input[name="title"]').value.trim();
-            const description = document.querySelector('textarea[name="description"]').value.trim();
-            const files = selectedFiles;
 
-            if (!title || !description) {
-                alert("יש למלא כותרת ותיאור");
-                return;
+
+        document.getElementById("userSubmitBtn").addEventListener("click", async () => {
+            const banner = document.getElementById("formErrorBanner");
+            banner.style.display = "none";
+
+            const requiredFields = document.querySelectorAll("#recipeForm [required]");
+            for (const field of requiredFields) {
+                if (!field.value.trim()) {
+                    banner.textContent = "נא למלא את כל השדות החובה המסומנים בכוכבית *";
+                    banner.style.display = "block";
+                    field.scrollIntoView({ behavior: "smooth", block: "center" });
+                    field.focus();
+                    return;
+                }
             }
 
-            // ❗ מניעה של יותר מ־3 תמונות
+            const title = document.querySelector('input[name="title"]').value.trim();
+            const description = document.querySelector('textarea[name="description"]').value.trim();
+            const ingredients = document.querySelector('textarea[name="ingredients"]').value.trim();
+            const instructions = document.querySelector('textarea[name="instructions"]').value.trim();
+            const difficulty = document.querySelector('input[name="difficulty"]').value.trim();
+            const prep_time_range = document.querySelector('select[name="prep_time_range"]').value;
+            const category = document.querySelector('select[name="category"]').value;
+            const author = document.querySelector('input[name="author"]').value.trim();
+            const files = selectedFiles;
+
             if (files.length > 3) {
-                alert("ניתן להעלות עד 3 תמונות בלבד.");
+                banner.textContent = "ניתן להעלות עד 3 תמונות בלבד.";
+                banner.style.display = "block";
                 return;
             }
 
@@ -217,20 +236,10 @@
                     const url = await compressAndUploadImage(files[i], i);
                     imageUrls.push(url);
                 } catch (error) {
-                    alert("שגיאה בהעלאת תמונה #" + (i + 1));
+                    banner.textContent = "שגיאה בהעלאת תמונה #" + (i + 1);
+                    banner.style.display = "block";
                     return;
                 }
-            }
-            const ingredients = document.querySelector('textarea[name="ingredients"]').value.trim();
-            const instructions = document.querySelector('textarea[name="instructions"]').value.trim();
-            const difficulty = document.querySelector('input[name="difficulty"]').value.trim();
-            const prep_time_range = document.querySelector('select[name="prep_time_range"]').value;
-            const category = document.querySelector('select[name="category"]').value;
-            const author = document.querySelector('input[name="author"]').value.trim();
-
-            if (!title || !description || !ingredients || !instructions || !difficulty || !prep_time_range) {
-                alert("נא למלא את כל השדות הנדרשים.");
-                return;
             }
 
             const { error } = await supabase.from("recipes").insert({
@@ -241,21 +250,21 @@
                 difficulty,
                 prep_time_range,
                 category,
-                author, // ✅ שם השולח
+                author,
                 image1_url: imageUrls[0] || null,
                 image2_url: imageUrls[1] || null,
                 image3_url: imageUrls[2] || null,
                 is_approved: false
             });
 
-
-
             if (error) {
-                alert("שגיאה בשליחה: " + error.message);
+                banner.textContent = "שגיאה בשליחה: " + error.message;
+                banner.style.display = "block";
             } else {
                 window.location.href = "success-recipe.html";
             }
         });
+
 
 
 
