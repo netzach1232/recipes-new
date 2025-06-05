@@ -47,9 +47,6 @@ form button:hover {
     background-color: #45a049;
 }
 
-#fileLimitMessage {
-    font-size: 0.9rem;
-}
 
 /* קופסת קוד סודי */
 .secret-box {
@@ -240,6 +237,7 @@ form#recipeForm {
     transition: border 0.3s ease, background-color 0.3s ease;
 }
 
+
 /* כשהשדה בפוקוס */
 .recipe-input:focus {
     border-color: #a5a7a8;
@@ -258,13 +256,7 @@ select.recipe-input {
     font-weight: bold;
 }
 
-/* הודעת הגבלה על תמונות */
-#fileLimitMessage {
-    font-size: 13px;
-    color: red;
-    margin-top: 8px;
-    font-weight: bold;
-}
+
 
 /* קלט קובץ */
 input[type="file"] {
@@ -428,4 +420,33 @@ textarea.recipe-input {
 
 .custom-file-input-wrapper input[type="file"] {
     display: none;
+}
+
+#fileLimitMessage {
+    background-color: #df5a5a34;
+    border-radius: 12px;
+    padding: 10px 14px;
+}
+
+
+
+@keyframes flash {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    35% {
+        opacity: 0;
+    }
+
+    65% {
+        opacity: 1;
+    }
+}
+
+
+.flash-animation {
+    animation: flash 1.8s ease-in-out infinite;
 }
