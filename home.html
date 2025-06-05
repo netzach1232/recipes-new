@@ -71,8 +71,6 @@
         });
 
 
-        checkSession();
-
         // הצגת תפריט יציאה בלחיצה על האזור של המשתמש
         document.getElementById("userInfo").addEventListener("click", () => {
             const menu = document.getElementById("logoutMenu");
@@ -115,16 +113,30 @@
             const container = document.createElement("div");
             container.classList.add("recipe-container");
 
-            const previewHTML = `<button class="recipe-button">${recipe.title || "ללא כותרת"}</button>`;
+            const createdAt = new Date(recipe.created_at);
+            const formattedDate = createdAt.toLocaleDateString("he-IL", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            });
+
+            const previewHTML = `
+  <button class="recipe-button">
+    <div>${recipe.title || "ללא כותרת"}</div>
+    <div style="font-size: 0.8rem; color: #666;">📅 הועלה בתאריך: ${formattedDate}</div>
+  </button>
+`;
             const fullHTML = `
 <div class="recipe-content">
     <div class="recipe-text">
+                <div><strong>👤 השולח:</strong><div>${recipe.author || "לא צויין"}</div></div> <!-- ✅ חדש -->
         <div><strong>כותרת:</strong><div class="recipe-title">${recipe.title || "ללא כותרת"}</div></div>
         <div><strong>תיאור:</strong><div class="recipe-description">${recipe.description || "אין תיאור למתכון"}</div></div>
         <div><strong>מצרכים:</strong><div>${recipe.ingredients || "לא צויינו מצרכים"}</div></div>
         <div><strong>אופן הכנה:</strong><div>${recipe.instructions || "אין הוראות הכנה"}</div></div>
         <div><strong>רמת קושי:</strong><br><div class="difficulty">${recipe.difficulty || "לא צויין"}</div></div>
         <div><strong>⏱️ זמן הכנה:</strong><div>${recipe.prep_time_range || "לא צויין"}</div></div>
+        <div><strong>📝 קטגוריה:</strong><div>${recipe.category || "לא צוינה קטגוריה"}</div></div>
     </div>
     <div class="recipe-images">
         ${recipe.image1_url ? `<img src="${recipe.image1_url}" class="recipe-img">` : ""}
@@ -133,6 +145,8 @@
     </div>
 </div>
 `;
+
+
 
 
 
@@ -159,15 +173,25 @@
         }
 
 
-
         let currentPage = 1;
         const recipesPerPage = 10;
 
         async function loadRecipes(page = 1) {
             currentPage = page;
 
-            const { data, error } = await supabase.from("recipes").select("*");
-            if (error) return console.error("❌ שגיאה בקבלת מתכונים:", error);
+            const from = (page - 1) * recipesPerPage;
+            const to = from + recipesPerPage - 1;
+
+            const { data, error } = await supabase
+                .from("recipes")
+                .select("*")
+                .order("created_at", { ascending: false }) // ✅ מיון מהחדש לישן
+                .range(from, to); // ✅ דפדוף לפי עמודים
+
+            if (error) {
+                console.error("❌ שגיאה בקבלת מתכונים:", error);
+                return;
+            }
 
             const approved = data.filter(recipe => recipe.is_approved === true);
             const list = document.getElementById("recipeList");
@@ -178,16 +202,12 @@
                 return;
             }
 
-            const start = (page - 1) * recipesPerPage;
-            const end = start + recipesPerPage;
-            const currentRecipes = approved.slice(start, end);
-
-            currentRecipes.forEach(recipe => list.appendChild(createRecipeElement(recipe)));
+            approved.forEach(recipe => list.appendChild(createRecipeElement(recipe)));
 
             renderPagination(approved.length);
             applyDifficultyColors();
-
         }
+
 
 
 
@@ -326,7 +346,6 @@
                 if (text === "קשה") div.classList.add("red");
             });
         }
-        applyDifficultyColors();
 
     </script>
 
