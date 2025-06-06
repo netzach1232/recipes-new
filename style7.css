@@ -1,0 +1,39 @@
+.single-recipe {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.single-recipe img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.single-recipe h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.single-recipe p {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #444;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    background-color: #d8ae5b;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}

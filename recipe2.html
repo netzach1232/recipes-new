@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פרטי מתכון</title>
+    <link rel="stylesheet" href="style7.css">
+</head>
+
+<body>
+    <div class="single-recipe" id="recipeContainer">
+        <p>טוען מתכון...</p>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const SUPABASE_URL = 'https://izpbbjhikbbbyahxzhkg.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6cGJiamhpa2JiYnlhaHh6aGtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxOTMxMDUsImV4cCI6MjA2Mzc2OTEwNX0.Gv0WaUlkUAW1qBNEaaXDCWWpwWgbvBTya8KQzFhx08s';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const container = document.getElementById("recipeContainer");
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const recipeId = urlParams.get("id");
+
+        if (!recipeId) {
+            container.innerHTML = "<p>שגיאה: לא נמסר מזהה מתכון.</p>";
+        } else {
+            loadRecipe(recipeId);
+        }
+
+        async function loadRecipe(id) {
+            const { data, error } = await supabase
+                .from("recipes")
+                .select("*")
+                .eq("id", id)
+                .eq("is_approved", true)
+                .single();
+
+            if (error || !data) {
+                container.innerHTML = "<p>❌ שגיאה בטעינת המתכון או שהוא אינו מאושר.</p>";
+                return;
+            }
+
+            const recipe = data;
+            const images = [recipe.image1_url, recipe.image2_url, recipe.image3_url].filter(Boolean);
+            const imageHTML = images.map(url => `<img src="${url}" alt="${recipe.title}">`).join("");
+
+            container.innerHTML = `
+        <h2>${recipe.title || "ללא כותרת"}</h2>
+        <p><strong>👤 השולח:</strong> ${recipe.author || "לא צויין"}</p>
+        <p><strong>📄 תיאור:</strong><br>${recipe.description || "אין תיאור"}</p>
+        <p><strong>📋 מצרכים:</strong><br>${recipe.ingredients || "אין מידע"}</p>
+        <p><strong>🧑‍🍳 אופן הכנה:</strong><br>${recipe.instructions || "אין מידע"}</p>
+        <p><strong>⏱️ זמן הכנה:</strong> ${recipe.prep_time_range || "לא צויין"}</p>
+        <p><strong>🔥 רמת קושי:</strong> ${recipe.difficulty || "לא צויין"}</p>
+        <p><strong>🍽️ קטגוריה:</strong> ${recipe.category || "לא צויין"}</p>
+        ${imageHTML}
+        <a class="back-btn" href="home.html">⬅ חזור לדף הבית</a>
+      `;
+        }
+    </script>
+</body>
+
+</html>
