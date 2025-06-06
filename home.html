@@ -108,69 +108,25 @@
 
         };
 
+        function createThumbnail(recipe) {
+            const images = [recipe.image1_url, recipe.image2_url, recipe.image3_url].filter(Boolean);
+            if (images.length === 0) return null;
 
-        function createRecipeElement(recipe) {
-            const container = document.createElement("div");
-            container.classList.add("recipe-container");
+            const randomImage = images[Math.floor(Math.random() * images.length)];
 
-            const createdAt = new Date(recipe.created_at);
-            const formattedDate = createdAt.toLocaleDateString("he-IL", {
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            });
+            const wrapper = document.createElement("div");
+            wrapper.className = "thumbnail-box";
 
-            const previewHTML = `
-  <button class="recipe-button">
-    <div>${recipe.title || "ללא כותרת"}</div>
-    <div style="font-size: 0.8rem; color: #666;">📅 הועלה בתאריך: ${formattedDate}</div>
-  </button>
-`;
-            const fullHTML = `
-<div class="recipe-content">
-    <div class="recipe-text">
-                <div><strong>👤 השולח:</strong><div>${recipe.author || "לא צויין"}</div></div> <!-- ✅ חדש -->
-        <div><strong>כותרת:</strong><div class="recipe-title">${recipe.title || "ללא כותרת"}</div></div>
-        <div><strong>תיאור:</strong><div class="recipe-description">${recipe.description || "אין תיאור למתכון"}</div></div>
-        <div><strong>מצרכים:</strong><div>${recipe.ingredients || "לא צויינו מצרכים"}</div></div>
-        <div><strong>רמת קושי:</strong><br><div class="difficulty">${recipe.difficulty || "לא צויין"}</div></div>
-        <div><strong>⏱️ זמן הכנה:</strong><div>${recipe.prep_time_range || "לא צויין"}</div></div>
-        <div><strong>📝 קטגוריה:</strong><div>${recipe.category || "לא צוינה קטגוריה"}</div></div>
-                <div><strong>אופן הכנה:</strong><div>${recipe.instructions || "אין הוראות הכנה"}</div></div>
-    </div>
-    <div class="recipe-images">
-        ${recipe.image1_url ? `<img src="${recipe.image1_url}" class="recipe-img">` : ""}
-        ${recipe.image2_url ? `<img src="${recipe.image2_url}" class="recipe-img">` : ""}
-        ${recipe.image3_url ? `<img src="${recipe.image3_url}" class="recipe-img">` : ""}
-    </div>
-</div>
-`;
+            wrapper.innerHTML = `
+        <a href="recipe2.html?id=${recipe.id}">
+            <img src="${randomImage}" alt="${recipe.title}" class="thumbnail-image">
+            <div class="thumb-title">${recipe.title || "ללא כותרת"}</div>
+        </a>
+    `;
 
-
-
-
-
-            const preview = document.createElement("div");
-            preview.classList.add("recipe-preview");
-            preview.innerHTML = previewHTML;
-
-            const full = document.createElement("div");
-            full.classList.add("recipe-full");
-            full.innerHTML = fullHTML;
-
-            container.appendChild(preview);
-            container.appendChild(full);
-
-            container.addEventListener("click", () => {
-                // סגור מתכונים פתוחים אחרים
-                document.querySelectorAll(".recipe-full.open").forEach(el => {
-                    if (el !== full) el.classList.remove("open");
-                });
-                full.classList.toggle("open");
-            });
-
-            return container;
+            return wrapper;
         }
+
 
 
         let currentPage = 1;
@@ -185,8 +141,8 @@
             const { data, error } = await supabase
                 .from("recipes")
                 .select("*")
-                .order("created_at", { ascending: false }) // ✅ מיון מהחדש לישן
-                .range(from, to); // ✅ דפדוף לפי עמודים
+                .order("created_at", { ascending: false })
+                .range(from, to);
 
             if (error) {
                 console.error("❌ שגיאה בקבלת מתכונים:", error);
@@ -202,12 +158,11 @@
                 return;
             }
 
-            approved.forEach(recipe => list.appendChild(createRecipeElement(recipe)));
-
-            renderPagination(approved.length);
-            applyDifficultyColors();
+            approved.forEach(recipe => {
+                const thumb = createThumbnail(recipe);
+                if (thumb) list.appendChild(thumb);
+            });
         }
-
 
 
 
